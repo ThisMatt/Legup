@@ -55,9 +55,7 @@ public abstract class CaseRule_Generic extends CaseRule {
 
         return null;
     }
-
-    // haha funny comment
-
+    
     /**
      * Checks whether the child node logically follows from the parent node
      * at the specific puzzleElement index using this rule
