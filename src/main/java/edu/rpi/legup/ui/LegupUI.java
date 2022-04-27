@@ -35,6 +35,7 @@ import edu.rpi.legup.ui.treeview.TreeViewSelection;
 import edu.rpi.legup.user.Submission;
 import edu.rpi.legupupdate.Update;
 import edu.rpi.legupupdate.UpdateProgress;
+import edu.rpi.legup.grader.LegupGrader;
 import io.grpc.internal.KeepAliveManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -630,6 +631,7 @@ public class LegupUI extends JFrame implements WindowListener, IHistoryListener 
                 LOGGER.error(e.getMessage());
             }
         }*/
+
     }
 
     private boolean basicCheckProof(int[][] origCells) {
