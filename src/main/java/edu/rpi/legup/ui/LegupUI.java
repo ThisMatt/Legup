@@ -540,8 +540,27 @@ public class LegupUI extends JFrame implements WindowListener, IHistoryListener 
     private void checkProofAll() {
         System.out.println("Entered");
         GameBoardFacade facade = GameBoardFacade.getInstance();
+        JFileChooser folderBrowser = new JFileChooser();
+        folderBrowser.setCurrentDirectory(new java.io.File("."));
+        folderBrowser.setDialogTitle("Select Directory");
+        folderBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folderBrowser.setAcceptAllFileFilterUsed(false);
+        folderBrowser.showOpenDialog(this);
+        File folder = folderBrowser.getSelectedFile();
 
-        folderBrowser = new JFileChooser();
+        final String BATCH_GRADING_RESULT_TITLE = "Legup Batch Grading";
+        try
+        {
+            LegupGrader grader = new LegupGrader();
+            grader.checkProofAll(folder);
+            JOptionPane.showMessageDialog(null, "Batch grading complete.", BATCH_GRADING_RESULT_TITLE, JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (IOException e)
+        {
+            JOptionPane.showMessageDialog(null, "ERROR: Batch grading could not be completed", BATCH_GRADING_RESULT_TITLE, JOptionPane.ERROR_MESSAGE);
+        }
+
+        /*folderBrowser = new JFileChooser();
         folderBrowser.setCurrentDirectory(new java.io.File("."));
         folderBrowser.setDialogTitle("Select Directory");
         folderBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

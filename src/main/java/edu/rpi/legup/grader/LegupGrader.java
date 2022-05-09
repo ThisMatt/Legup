@@ -1,10 +1,5 @@
 package edu.rpi.legup.grader;
 
-import edu.rpi.legup.app.GameBoardFacade;
-import edu.rpi.legup.model.Puzzle;
-import edu.rpi.legup.save.InvalidFileFormatException;
-
-import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,18 +7,65 @@ import java.io.IOException;
 
 public class LegupGrader
 {
+    public void checkProofAll(File folder) throws IOException
+    {
+        String filename = java.time.LocalDate.now() + "_legup_grading_results";
+        final String EXTENSION = ".csv";
+        final String ABSOLUTE_PATH = folder.getAbsolutePath();
+        if (isExistingFile(ABSOLUTE_PATH, filename, EXTENSION))
+            filename = this.getValidFilename(ABSOLUTE_PATH, filename, EXTENSION);
+
+        final String[] HEADERS = {"Name", "File Name", "Problem Status Number", "Problem Status"};
+        File resultFile = new File(ABSOLUTE_PATH + File.separator + filename + EXTENSION);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(resultFile));
+
+        // Create header
+        this.createCSVHeader(writer);
+
+        for (final File folderEntry : folder.listFiles(File::isDirectory))
+        {
+            System.out.println(folderEntry.getName());
+        }
+        writer.close();
+    }
+
+    public void checkProof()
+    {
+
+    }
+
+    private void createCSVHeader(BufferedWriter writer) throws IOException
+    {
+        writer.append("Name");
+        writer.append(",");
+        writer.append("File Name");
+        writer.append(",");
+        writer.append("Problem Status Number");
+        writer.append(",");
+        writer.append("Problem Status");
+        writer.append("\n");
+    }
+
+    private boolean isExistingFile(String folderAbsolutePath, String filename, String extension)
+    {
+        File tempFile = new File(folderAbsolutePath + File.separator + filename + extension);
+        return tempFile.exists();
+    }
+
+    private String getValidFilename(String folderAbsolutePath, String filename, String extension)
+    {
+        int counter = 1;
+        String newFilename = filename + counter;
+        while (isExistingFile(folderAbsolutePath, newFilename, extension))
+            counter++;
+        return newFilename;
+    }
+
     /**
      * Checks the proof for all files
      */
-    public static void checkProofAll(GameBoard facade) {
-        JFileChooser folderBrowser = new JFileChooser();
-        folderBrowser.setCurrentDirectory(new java.io.File("."));
-        folderBrowser.setDialogTitle("Select Directory");
-        folderBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        folderBrowser.setAcceptAllFileFilterUsed(false);
-        folderBrowser.showOpenDialog(this);
-        File folder = folderBrowser.getSelectedFile();
-
+    /*private static void oldCheckProofAll(File folder)
+    {
         //FileWriter csvWriter = new FileWriter("new.csv");
         File resultFile = new File(folder.getAbsolutePath() + File.separator +"result.csv");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultFile))) {
@@ -69,7 +111,7 @@ public class LegupGrader
                             }
                             writer.append("\n");
                         } catch (InvalidFileFormatException e) {
-                            LOGGER.error(e.getMessage());
+                            // LOGGER.error(e.getMessage());
                             writer.append("?, Ungradeable");
                             writer.append("\n");
                         }
@@ -105,6 +147,6 @@ public class LegupGrader
             } catch (InvalidFileFormatException e) {
                 LOGGER.error(e.getMessage());
             }
-        }*/
-    }
+        }
+    }*/
 }
