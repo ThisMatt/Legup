@@ -1,5 +1,9 @@
 package edu.rpi.legup.grader;
 
+import edu.rpi.legup.app.GameBoardFacade;
+import edu.rpi.legup.model.Puzzle;
+import edu.rpi.legup.save.InvalidFileFormatException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,6 +13,8 @@ public class LegupGrader
 {
     public void checkProofAll(File folder) throws IOException
     {
+        GameBoardFacade facade = GameBoardFacade.getInstance();
+        System.out.println("Entered checkProofAll");
         String filename = java.time.LocalDate.now() + "_legup_grading_results";
         final String EXTENSION = ".csv";
         final String ABSOLUTE_PATH = folder.getAbsolutePath();
@@ -21,17 +27,76 @@ public class LegupGrader
 
         // Create header
         this.createCSVHeader(writer);
-
+        System.out.println("About to start traversing");
         for (final File folderEntry : folder.listFiles(File::isDirectory))
         {
             System.out.println(folderEntry.getName());
+            this.checkProofsInFolder(writer, folderEntry, facade);
         }
+        System.out.println("Closing writer");
         writer.close();
     }
 
-    public void checkProof()
+    public void checkProofsInFolder(BufferedWriter writer, final File folderEntry, GameBoardFacade facade) throws IOException
     {
+        int counter = 0;
+        writer.append(folderEntry.getName());
+        writer.append(",");
+        for (final File fileEntry : folderEntry.listFiles())
+        {
+            if (fileEntry.getName().charAt(0) == '.')
+                continue;
+            counter++;
+            if (counter > 1)
+            {
+                writer.append(folderEntry.getName());
+                writer.append(",");
+            }
+            writer.append(fileEntry.getName());
+            writer.append(",");
 
+            String filename = folderEntry.getAbsolutePath() + File.separator + fileEntry.getName();
+            try
+            {
+                if (this.isSolved(filename, facade))
+                {
+                    writer.append("1");
+                    writer.append(",");
+                    writer.append("Solved");
+                }
+                else
+                {
+                    writer.append("0");
+                    writer.append(",");
+                    writer.append("Unsolved");
+                }
+            }
+            catch (InvalidFileFormatException e)
+            {
+                writer.append("?");
+                writer.append(",");
+                writer.append("Ungradeable");
+            }
+            writer.append("\n");
+        }
+        if (counter == 0)
+        {
+            writer.append("No file");
+            writer.append("\n");
+        }
+    }
+
+    private boolean isSolved(String filename, GameBoardFacade facade) throws InvalidFileFormatException
+    {
+        File puzzleFile = new File(filename);
+        if (puzzleFile != null && puzzleFile.exists())
+        {
+            GameBoardFacade.getInstance().loadPuzzle(filename);
+            facade = GameBoardFacade.getInstance();
+            Puzzle puzzle = facade.getPuzzleModule();
+            return puzzle.isPuzzleComplete();
+        }
+        throw new InvalidFileFormatException("Puzzle file is null or does not exist");
     }
 
     private void createCSVHeader(BufferedWriter writer) throws IOException
@@ -57,7 +122,10 @@ public class LegupGrader
         int counter = 1;
         String newFilename = filename + counter;
         while (isExistingFile(folderAbsolutePath, newFilename, extension))
+        {
             counter++;
+            newFilename = filename + counter;
+        }
         return newFilename;
     }
 

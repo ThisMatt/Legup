@@ -560,6 +560,7 @@ public class LegupUI extends JFrame implements WindowListener, IHistoryListener 
             JOptionPane.showMessageDialog(null, "ERROR: Batch grading could not be completed", BATCH_GRADING_RESULT_TITLE, JOptionPane.ERROR_MESSAGE);
         }
 
+        // uncomment here
         /*folderBrowser = new JFileChooser();
         folderBrowser.setCurrentDirectory(new java.io.File("."));
         folderBrowser.setDialogTitle("Select Directory");
@@ -600,8 +601,8 @@ public class LegupUI extends JFrame implements WindowListener, IHistoryListener 
                     if (puzzleFile != null && puzzleFile.exists()) {
                         try {
                             GameBoardFacade.getInstance().loadPuzzle(fileName);
-                            String puzzleName = GameBoardFacade.getInstance().getPuzzleModule().getName();
-                            setTitle(puzzleName + " - " + puzzleFile.getName());
+                            //String puzzleName = GameBoardFacade.getInstance().getPuzzleModule().getName();
+                            //setTitle(puzzleName + " - " + puzzleFile.getName());
                             facade = GameBoardFacade.getInstance();
                             Puzzle puzzle = facade.getPuzzleModule();
                             if (puzzle.isPuzzleComplete()) {
