@@ -25,7 +25,6 @@ edu.rpi.legup.puzzle.nurikabe
 edu.rpi.legup.puzzle.nurikabe.elements
 edu.rpi.legup.puzzle.nurikabe.rules
 edu.rpi.legup.puzzle.shorttruthtable
-edu.rpi.legup.puzzle.shorttruthtable.elements
 edu.rpi.legup.puzzle.shorttruthtable.rules.basic
 edu.rpi.legup.puzzle.shorttruthtable.rules.basic.elimination
 edu.rpi.legup.puzzle.shorttruthtable.rules.basic.introduction
